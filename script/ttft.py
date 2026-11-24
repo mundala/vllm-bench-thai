@@ -8,6 +8,7 @@ parser = argparse.ArgumentParser()
 parser.add_argument("--url", default="http://localhost:11434/v1/chat/completions")
 parser.add_argument("--model", default="qwen2.5:7b")
 parser.add_argument("--runs", type=int,default=5)
+parser.add_argument("--out", default="results.json")
 args = parser.parse_args()
 
 URL = args.url
@@ -63,5 +64,5 @@ med_gap = statistics.median(r[1] for r in results)
 print(f"median TTFT: {med_ttft:.0f} ms")
 print(f"median gap: {med_gap:.0f} ms, about {1000 / med_gap:.1f} tokens/s")
       
-with open("results.json", "w") as f:
+with open(args.out, "w") as f:
     json.dump({"model": MODEL, "runs": results}, f, indent=2)
