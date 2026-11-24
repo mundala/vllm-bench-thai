@@ -39,13 +39,13 @@ here once I've run it.
 
 ## Results
 
-Baseline on my laptop, Ollama, CPU only. Temperature 0, max_tokens 150.
+Baseline on my laptop, Ollama, CPU only. Median of 5 counted runs after 1 warm-up. Temperature 0, max_tokens 150.
 
 | server | model | median TTFT (ms) | median gap (ms) | tokens/s |
 | --- | --- | --- | --- | --- |
-| Ollama (laptop, CPU) | qwen2.5:7b | 273 | 317 | 3.2 |
+| Ollama (laptop, CPU) | qwen2.5:7b | 354 | 334 | 3.0 |
 
-3.2 tokens/s is slow, yes. It's a laptop CPU. The vLLM rows are the real test.
+3.0 tokens/s is slow, yes. It's a laptop CPU. The vLLM rows are the real test.
 
 ## What failed
 
