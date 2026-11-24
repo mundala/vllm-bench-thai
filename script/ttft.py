@@ -10,7 +10,9 @@ body = json.dumps({
     "model": MODEL,
     "messages": [{"role": "user", "content": PROMPT}],
     "stream": True,
-    "stream_options": {"include_usage": True}
+    "stream_options": {"include_usage": True},
+    "temperature": 0,
+    "max_tokens": 150
 }).encode()
 
 req = urllib.request.Request(URL, data=body, headers={"Content-Type": "application/json"})
