@@ -2,9 +2,16 @@ import json
 import statistics
 import time
 import urllib.request
+import argparse
 
-URL = "http://127.0.0.1:11434/v1/chat/completions"
-MODEL = "qwen2.5:7b"
+parser = argparse.ArgumentParser()
+parser.add_argument("--url", default="http://localhost:11434/v1/chat/completions")
+parser.add_argument("--model", default="qwen2.5:7b")
+parser.add_argument("--runs", type=int,default=5)
+args = parser.parse_args()
+
+URL = args.url
+MODEL = args.model
 PROMPT = "ทำไมน้ำทะเลจึงเค็ม อธิบายสั้น ๆ"
 
 body = json.dumps({
@@ -17,7 +24,6 @@ body = json.dumps({
 }).encode()
 
 req = urllib.request.Request(URL, data=body, headers={"Content-Type": "application/json"})
-
 
 def run():
     start = time.perf_counter()
@@ -46,7 +52,7 @@ print("warm-up run (not counted)...")
 run()
 
 results = []
-for i in range(5):
+for i in range(args.runs):
     r = run()
     results.append(r)
     print(f"run {i + 1}: TTFT {r[0]:.0f} ms, gap {r[1]:.0f} ms, tokens {r[2]}")
