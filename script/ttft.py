@@ -58,11 +58,13 @@ for i in range(args.runs):
     results.append(r)
     print(f"run {i + 1}: TTFT {r[0]:.0f} ms, gap {r[1]:.0f} ms, tokens {r[2]}")
 
-avg_ttft = sum(r[0] for r in results) / len(results)
 med_ttft = statistics.median(r[0] for r in results)
 med_gap = statistics.median(r[1] for r in results)
 print(f"median TTFT: {med_ttft:.0f} ms")
 print(f"median gap: {med_gap:.0f} ms, about {1000 / med_gap:.1f} tokens/s")
+print("| model | median TTFT (ms) | median gap (ms) | tokens/s |")
+print("| --- | --- | --- | --- |")
+print(f"| {MODEL} | {med_ttft:.0f} | {med_gap:.0f} | {1000 / med_gap:.1f} |")
       
 with open(args.out, "w") as f:
     json.dump({"model": MODEL, "runs": results}, f, indent=2)
