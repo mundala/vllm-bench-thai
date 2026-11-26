@@ -5,7 +5,7 @@ comparison, because its 256-token cap cut off most Qwen3 answers.
 
 ## Setup (both runs)
 
-- GPU: RunPod Secure Cloud RTX 4090, 24 GB (Ada), billed at $0.89/hr.
+- GPU: RunPod RTX 4090, 24 GB (Ada), billed at $0.89/hr.
 - vLLM 0.34.0. Locked for every config: `--max-model-len 4096 --gpu-memory-utilization 0.90`.
 - 23 Thai prompts, 64 requests per concurrency level (1, 8, 32), temperature 0, streaming.
 - The client ran on the pod, so internet latency is not in the TTFT numbers. Local loopback HTTP and scheduling time still are.
