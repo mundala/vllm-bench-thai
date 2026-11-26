@@ -1,0 +1,7 @@
+warm-up (not counted), 23 prompts loaded
+| label | conc | ok/fail | TTFT p50 | TTFT p95 | gap p50 | tok/s | Thai chars/s | chars/tok | $/1M tok | $/1M Thai chars | e2e | per-req | capped |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| typhoon-bf16 | 1 | 64/0 | 37 | 41 | 16 | 63 | 100 | 1.58 | 3.91 | 2.47 | e2e50 2442 | req tok/s 64 | capped 0/64 |
+| typhoon-bf16 | 8 | 64/0 | 50 | 62 | 16 | 443 | 714 | 1.61 | 0.56 | 0.35 | e2e50 2513 | req tok/s 63 | capped 0/64 |
+| typhoon-bf16 | 32 | 64/0 | 61 | 167 | 18 | 1018 | 1625 | 1.60 | 0.24 | 0.15 | e2e50 2916 | req tok/s 56 | capped 0/64 |
+saved results/typhoon-bf16.json

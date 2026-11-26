@@ -1,0 +1,7 @@
+warm-up (not counted), 23 prompts loaded
+| label | conc | ok/fail | TTFT p50 | TTFT p95 | gap p50 | tok/s | Thai chars/s | chars/tok | $/1M tok | $/1M Thai chars | e2e | per-req | capped |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| q3-awq | 1 | 64/0 | 24 | 31 | 7 | 149 | 212 | 1.42 | 1.65 | 1.17 | e2e50 2369 | req tok/s 151 | capped 8/64 |
+| q3-awq | 8 | 64/0 | 29 | 52 | 7 | 954 | 1353 | 1.42 | 0.26 | 0.18 | e2e50 2114 | req tok/s 141 | capped 6/64 |
+| q3-awq | 32 | 64/0 | 63 | 168 | 8 | 2473 | 3494 | 1.41 | 0.10 | 0.07 | e2e50 2654 | req tok/s 117 | capped 7/64 |
+saved results/q3-awq.json

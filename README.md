@@ -1,57 +1,77 @@
 # vllm-bench-thai
 
-Benchmarking one open-weight model, Qwen2.5-7B-Instruct, on vLLM:
-full precision (FP16) against quantised versions (AWQ, and FP8 where the GPU supports it),
-on a single rented Runpod GPU.
+A small, honest benchmark of open-weight models serving Thai on vLLM: speed, memory and cost on one
+rented RTX 4090, comparing full precision (BF16) with quantised versions (FP8, AWQ).
 
-**Status:**
-Work in Progress. Ollama baseline done. vLLM runs not started.
+**Status:** speed, memory and cost are measured (run 2). **Thai answer quality is not scored yet.**
 
-## What I'm measuring
+## Headline result
 
-- Time to first token (TTFT)
-- Inter-token latency (ITL)
-- Output tokens per second at concurrency 1, 8 and 32
-- GPU memory used
-- Cost per million output tokens, from the hourly GPU price
-- Thai quality: 20 Thai prompts, scored 1 to 5 against a written rubric, FP16 vs AWQ
+On an RTX 4090 at $0.89/hr, with 32 concurrent requests, Qwen3-8B AWQ served about 2,470 output
+tokens/s at roughly $0.10 per million output tokens. The BF16 version served about 1,040 tokens/s at
+roughly $0.24. Whether AWQ or FP8 hurt Thai output is **not answered yet**.
 
-## Why
+Full tables, memory, kernels and caveats are in [RESULTS.md](RESULTS.md).
 
-I lead an LLM safety evaluation team and run quantised models locally on Ollama.
-This is my first step into measuring inference speed and cost properly,
-and checking whether quantisation hurts Thai output.
+## What I measured
 
-## Setup
+- Time to first token (TTFT), p50 and p95, at concurrency 1, 8 and 32.
+- Output tokens per second, and Thai characters per second.
+- Cost per million output tokens and per million Thai characters, from the hourly GPU price.
+- Weights memory and KV cache capacity, read from the vLLM server logs.
 
-The benchmark script is `script/ttft.py`. It streams one Thai prompt to any
-OpenAI-compatible server and reports TTFT and the gap between chunks
-(about one token each). The first request is a warm-up and isn't counted.
-After that it reports the median, so one slow run doesn't skew the numbers.
+Configs: Qwen3-8B in BF16, FP8 and AWQ, plus one Thai-tuned model, Typhoon2-Qwen2.5-7B in BF16.
+Locked for every config: `--max-model-len 4096 --gpu-memory-utilization 0.90`. 23 Thai prompts,
+64 requests per level, temperature 0. vLLM 0.34.0.
+
+## How to run it
+
+On the GPU pod, so network latency stays out of TTFT:
 
 ```bash
-python script/ttft.py --runs 5 --out results.json
+MAXTOK=1024 ./run_all.sh q3-awq 0.89     # configs: q3-bf16 | q3-fp8 | q3-awq | typhoon-bf16
 ```
-Options: `--url`, `--model`, `--runs`, `--out`.
 
-It only tests concurrency 1 for now. vLLM GPU and version details will go
-here once I've run it.
+`run_all.sh` starts vLLM with the locked flags, waits for it, runs `script/bench.py`, saves the
+server log and results under `results/`, then stops the server. The second argument is the GPU
+price in USD per hour.
 
-## Results
+## Honest limits
 
-Baseline on my laptop, Ollama, CPU only. Median of 5 counted runs after 1 warm-up. Temperature 0, max_tokens 150.
+- **Quality is unscored.** `results/run2/answers_readable.md` holds the raw answers for a Thai-speaking
+  reviewer. Until that is done, this is a speed and cost benchmark only.
+- **Small sample.** 23 prompts, 64 requests per level, one run per config.
+- **TTFT** is the time to the first streamed text chunk. The "gap" column is the gap between streamed
+  chunks, which is not true inter-token latency.
+- **FP8 on a 4090** runs weight-only through a Marlin kernel, because the GPU has no native FP8
+  compute. The FP8 numbers describe this GPU only.
+- **Typhoon2 answers are shorter** (about 195 tokens against about 446), so compare it by cost per
+  Thai character, not per token.
+- **Cost** is GPU rental only and counts output tokens only.
+- **Prefix caching** was on in all runs. I have not measured its effect.
+
+## What failed
+
+- **Run 1 was unfair.** I capped replies at 256 tokens, which cut off about 58 to 67% of Qwen3 answers.
+  A cut-off answer cannot be judged fairly, so I reran with a 1,024-token cap. Run 1 stays in
+  `results/run1/` for comparison only.
+- **Run to run variation.** Qwen3 BF16 at concurrency 32 gave 1,386 tokens/s in run 1 and 1,044 in
+  run 2. I have not found the cause.
+
+## Laptop baseline (Ollama, CPU only)
+
+Median of 5 counted runs after 1 warm-up. Temperature 0, max_tokens 150, `script/ttft.py`.
 
 | server | model | median TTFT (ms) | median gap (ms) | tokens/s |
 | --- | --- | --- | --- | --- |
 | Ollama (laptop, CPU) | qwen2.5:7b | 354 | 334 | 3.0 |
 
-3.0 tokens/s is slow, yes. It's a laptop CPU. The vLLM rows are the real test.
+## Why
 
-## What failed
-
-Coming soon. Failures go here too.
+I lead an LLM safety evaluation team and run quantised models locally on Ollama. This is my first
+step into measuring inference speed and cost properly, and I wanted the failures written down too.
 
 ## AI assistance
 
-Some scripts were written with help from AI coding assistants (Claude Code, Codex).
-I ran every benchmark myself and checked every number in this repo.
+Some scripts and the write-up were drafted with AI coding assistants (Claude Code, Codex). I ran the
+benchmarks, and I checked the numbers against the saved result files.
