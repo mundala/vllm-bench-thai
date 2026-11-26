@@ -1,6 +1,6 @@
 # Thai quality prompts (draft, needs native review)
 
-Scored 1 to 5 against the rubric below. Same 20 prompts for FP16 and AWQ.
+Scored 1 to 5 against the rubric below. Same 23 prompts for FP16 and AWQ.
 All prompts are original. None come from client or work material.
 
 ## A. Facts and explanation (4)

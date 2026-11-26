@@ -3,5 +3,4 @@ __pycache__/
 .pytest_cache/
 .omc/
 .omx/
-ollama-test.json
 results.json

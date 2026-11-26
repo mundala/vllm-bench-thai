@@ -26,7 +26,7 @@ Locked for every config: `--max-model-len 4096 --gpu-memory-utilization 0.90`. 2
 
 ## How to run it
 
-On the GPU pod, so network latency stays out of TTFT:
+On the GPU pod, so internet latency stays out of TTFT (local loopback time is still included):
 
 ```bash
 MAXTOK=1024 ./run_all.sh q3-awq 0.89     # configs: q3-bf16 | q3-fp8 | q3-awq | typhoon-bf16
@@ -38,15 +38,15 @@ price in USD per hour.
 
 ## Honest limits
 
-- **Quality is unscored.** `results/run2/answers_readable.md` holds the raw answers for a Thai-speaking
-  reviewer. Until that is done, this is a speed and cost benchmark only.
+- **Quality is unscored.** `results/run2/answers_readable.md` holds the saved answers (concurrency 1)
+  for a Thai-speaking reviewer. Until that is done, this is a speed and cost benchmark only.
 - **Small sample.** 23 prompts, 64 requests per level, one run per config.
-- **TTFT** is the time to the first streamed text chunk. The "gap" column is the gap between streamed
-  chunks, which is not true inter-token latency.
+- **TTFT** is the time to the first streamed text chunk. The gap figures are gaps between streamed
+  chunks. They are not true inter-token latency.
 - **FP8 on a 4090** runs weight-only through a Marlin kernel, because the GPU has no native FP8
   compute. The FP8 numbers describe this GPU only.
-- **Typhoon2 answers are shorter** (about 195 tokens against about 446), so compare it by cost per
-  Thai character, not per token.
+- **Typhoon2 answers are shorter** (about 195 tokens on average, against about 450 for Qwen3), so
+  compare it by cost per Thai character, not per token.
 - **Cost** is GPU rental only and counts output tokens only.
 - **Prefix caching** was on in all runs. I have not measured its effect.
 
@@ -61,6 +61,7 @@ price in USD per hour.
 ## Laptop baseline (Ollama, CPU only)
 
 Median of 5 counted runs after 1 warm-up. Temperature 0, max_tokens 150, `script/ttft.py`.
+The tokens/s column is 1,000 divided by the median gap, as `script/ttft.py` calculates it.
 
 | server | model | median TTFT (ms) | median gap (ms) | tokens/s |
 | --- | --- | --- | --- | --- |
