@@ -36,6 +36,11 @@ MAXTOK=1024 ./run_all.sh q3-awq 0.89     # configs: q3-bf16 | q3-fp8 | q3-awq | 
 server log and results under `results/`, then stops the server. The second argument is the GPU
 price in USD per hour.
 
+## Where results live
+
+`run_all.sh` writes to `results/`. The published run-2 files were then moved by hand into
+`results/run2/` (and run 1 into `results/run1/`). Run the tests with `python -m pytest`.
+
 ## Honest limits
 
 - **Quality is unscored.** `results/run2/answers_readable.md` holds the saved answers (concurrency 1)
