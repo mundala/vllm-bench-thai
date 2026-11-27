@@ -28,8 +28,8 @@ rnd = random.Random(SEED)
 key, rows = {}, []
 sheet = [
     "# Blind scoring sheet\n",
-    "Score each answer in scoring/scores.csv. Labels (A to D) are shuffled per prompt. "
-    "Do not open key.json.\n",
+    ("Score each answer in scoring/scores.csv. "
+     "Labels (A to D) are shuffled per prompt. Do not open key.json.\n"),
 ]
 for n in sorted(prompts):
     question, by_config = prompts[n]
