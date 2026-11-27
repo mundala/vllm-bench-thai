@@ -3,7 +3,7 @@
 A small, honest benchmark of open-weight models serving Thai on vLLM: speed, memory and cost on one
 rented RTX 4090, comparing full precision (BF16) with quantised versions (FP8, AWQ).
 
-**Status:** speed, memory and cost are measured (run 2). **Thai answer quality is not scored yet.**
+**Status:** speed, memory and cost are measured (run 2). **Thai answer quality has a blind Codex draft pass in `scoring/scores.csv` (92 rows, `scoring/key.json` unopened); human native-Thai review and unblinding are still pending.**
 
 ## Headline result
 

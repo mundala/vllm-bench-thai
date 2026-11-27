@@ -2,6 +2,8 @@
 
 Scorer: Jean, native Thai speaker. One person, one pass, so this is one reviewer's judgement, not a validated study.
 
+Current `scoring/scores.csv` status (27 Nov 2026): populated with a blind draft pass by Codex (LLM-as-judge, `scoring/key.json` unopened) pending Jean's native-Thai human review and unblinding.
+
 ## How to score (blind)
 
 1. Open `scoring/blind_sheet.md`. Each prompt has four answers, labelled 1A to 1D, shuffled. You cannot tell which model wrote which.
