@@ -9,7 +9,9 @@ rented RTX 4090, comparing full precision (BF16) with quantised versions (FP8, A
 
 On an RTX 4090 at $0.89/hr, with 32 concurrent requests, Qwen3-8B AWQ served about 2,470 output
 tokens/s at roughly $0.10 per million output tokens. The BF16 version served about 1,040 tokens/s at
-roughly $0.24. Whether AWQ or FP8 hurt Thai output is **not answered yet**.
+roughly $0.24. Whether AWQ or FP8 hurt Thai output is **not answered yet**: the answers are saved and a
+blind scoring pack is ready in `scoring/` (see [How Thai quality gets scored](#how-thai-quality-gets-scored)).
+Until those scores exist, treat the speed gain as unproven for Thai quality.
 
 Full tables, memory, kernels and caveats are in [RESULTS.md](RESULTS.md).
 
@@ -68,9 +70,20 @@ price in USD per hour.
 Median of 5 counted runs after 1 warm-up. Temperature 0, max_tokens 150, `script/ttft.py`.
 The tokens/s column is 1,000 divided by the median gap, as `script/ttft.py` calculates it.
 
-| server | model | median TTFT (ms) | median gap (ms) | tokens/s |
-| --- | --- | --- | --- | --- |
-| Ollama (laptop, CPU) | qwen2.5:7b | 354 | 334 | 3.0 |
+| server | model | quantisation | median TTFT (ms) | median gap (ms) | tokens/s |
+| --- | --- | --- | --- | --- | --- |
+| Ollama (laptop, CPU) | qwen2.5:7b (7.6B parameters, Qwen2.5-7B-Instruct) | Q4_K_M, image digest 845dbda0ea48 | 354 | 334 | 3.0 |
+
+The model name is stored in `ollama-test.json`. The quantisation and digest come from `ollama show qwen2.5:7b`
+on the laptop that holds this model (Intel i5-1145G7, 32 GB RAM, no GPU used). The result file does not
+record which machine ran the benchmark, so confirm the hardware before quoting this row.
+
+## How Thai quality gets scored
+
+`scoring/blind_sheet.md` holds all 92 saved answers (4 configs x 23 prompts) with shuffled labels.
+Scores go in `scoring/scores.csv` using `scoring/RUBRIC.md`; `python3 -I script/unblind.py` then prints the
+mean per config. The key (`scoring/key.json`) is git-ignored and is opened only after scoring.
+This is one reviewer's judgement, not a validated study.
 
 ## Why
 
